@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Chapter 1 - Rust Quickstart Book</title>
+        <title>Project Structure - Rust Quickstart Book</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html" class="active"><strong aria-hidden="true">1.</strong> Chapter 1</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="project-structure.html" class="active"><strong aria-hidden="true">1.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">1.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">1.2.</strong> Unit Testing</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,18 +134,97 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="chapter-1"><a class="header" href="#chapter-1">Chapter 1</a></h1>
+                        <h1 id="creating-a-project"><a class="header" href="#creating-a-project">Creating a project</a></h1>
+<p>Use <code>cargo new</code> to start a new project:</p>
+<pre><code class="language-shell">cargo new demo-project
+</code></pre>
+<p>This will create a new directory named <code>demo-project</code> with the following files:</p>
+<pre><code>.git/&lt;git-stuff&gt;  &lt;- Cargo automatically initializes a git repository for us
+.gitignore
+Cargo.toml        &lt;- Cargo.toml contains project metadata used by the build system
+src/
+    main.rs       &lt;- Project source code
+</code></pre>
+<p>The filename <code>main.rs</code> is important because we are creating a bin project.
+Alternatively, we could create a lib project:</p>
+<pre><code class="language-shell">cargo new --lib demo-project
+</code></pre>
+<p>This generates:</p>
+<pre><code>.git/&lt;git-stuff&gt;
+.gitignore
+Cargo.toml
+src/
+    lib.rs
+</code></pre>
+<p>Bin projects are the default for <code>cargo new</code> but the following command is also valid:</p>
+<pre><code class="language-shell">cargo new --bin demo-project
+</code></pre>
+<p>Bin projects produce executable binaries while lib projects produce libraries to be used by other projects.
+We will ignore lib projects for now.</p>
+<h1 id="boilerplate-files"><a class="header" href="#boilerplate-files">Boilerplate files</a></h1>
+<p>Let's have a closer look at these generated files.</p>
+<h2 id="cargotoml"><a class="header" href="#cargotoml">Cargo.toml</a></h2>
+<pre><code class="language-toml">[package]
+name = &quot;demo-project&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+</code></pre>
+<p><code>package.name</code> and <code>package.version</code> are both required keys. <code>package.edition</code> tells cargo which rust edition to use.
+The rust <a href="https://doc.rust-lang.org/stable/edition-guide/">edition</a> is not the same thing as the rust version.
+For example, code that is written for edition 2021 could interoperate seamlessly with code that is written for edition
+2018 as long as we use a rust version that supports at least edition 2021.</p>
+<p>Under dependencies, we can specify external libraries that we would like to use.
+These external libraries are called crates.
+The cargo registry can be used to look up available crates at <a href="https://crates.io/">https://crates.io/</a>.
+Our own project would also be referred to as a crate.</p>
+<h2 id="srcmainrs"><a class="header" href="#srcmainrs">src/main.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;Hello, world!&quot;);
+}
+</code></pre></pre>
+<p>Like with a C/C++ project, rust expects a <code>main()</code> function which will used as the entry point of the program.
+It is possible to compile without a main function or without the rust standard library for bare metal programming.</p>
+<p><code>println!()</code> is a macro which will print to stdout. We will talk more about macros later.</p>
+<h1 id="build-and-run"><a class="header" href="#build-and-run">Build and run</a></h1>
+<p>Use <code>cargo build</code> to compile:</p>
+<pre><code class="language-shell">cargo build
+cargo build --debug          # &lt;- Default behaviour
+cargo build --release
+</code></pre>
+<p>This will produce a <code>target/</code> directory with the following binaries:</p>
+<pre><code>./target/debug/demo-project
+./target/release/demo-project
+</code></pre>
+<p>When we build our crate, cargo generates a <code>Cargo.lock</code> file. This file contains information about the build such as the
+versions and checksums of external crates that were downloaded and compiled into our program.
+This file is useful if we want to ensure reproducible builds.</p>
+<p>Use <code>cargo run</code> to both compile and then run:</p>
+<pre><code class="language-shell">cargo run
+cargo run --debug            # &lt;- Default behaviour
+cargo run --release
+</code></pre>
+<p>Use <code>cargo clean</code> to delete the <code>target/</code> directory.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="next" href="multiple-binaries.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="next" href="multiple-binaries.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

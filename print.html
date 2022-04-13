@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> Chapter 1</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="project-structure.html"><strong aria-hidden="true">1.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">1.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">1.2.</strong> Unit Testing</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -135,7 +135,243 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="chapter-1"><a class="header" href="#chapter-1">Chapter 1</a></h1>
+                        <h1 id="creating-a-project"><a class="header" href="#creating-a-project">Creating a project</a></h1>
+<p>Use <code>cargo new</code> to start a new project:</p>
+<pre><code class="language-shell">cargo new demo-project
+</code></pre>
+<p>This will create a new directory named <code>demo-project</code> with the following files:</p>
+<pre><code>.git/&lt;git-stuff&gt;  &lt;- Cargo automatically initializes a git repository for us
+.gitignore
+Cargo.toml        &lt;- Cargo.toml contains project metadata used by the build system
+src/
+    main.rs       &lt;- Project source code
+</code></pre>
+<p>The filename <code>main.rs</code> is important because we are creating a bin project.
+Alternatively, we could create a lib project:</p>
+<pre><code class="language-shell">cargo new --lib demo-project
+</code></pre>
+<p>This generates:</p>
+<pre><code>.git/&lt;git-stuff&gt;
+.gitignore
+Cargo.toml
+src/
+    lib.rs
+</code></pre>
+<p>Bin projects are the default for <code>cargo new</code> but the following command is also valid:</p>
+<pre><code class="language-shell">cargo new --bin demo-project
+</code></pre>
+<p>Bin projects produce executable binaries while lib projects produce libraries to be used by other projects.
+We will ignore lib projects for now.</p>
+<h1 id="boilerplate-files"><a class="header" href="#boilerplate-files">Boilerplate files</a></h1>
+<p>Let's have a closer look at these generated files.</p>
+<h2 id="cargotoml"><a class="header" href="#cargotoml">Cargo.toml</a></h2>
+<pre><code class="language-toml">[package]
+name = &quot;demo-project&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+</code></pre>
+<p><code>package.name</code> and <code>package.version</code> are both required keys. <code>package.edition</code> tells cargo which rust edition to use.
+The rust <a href="https://doc.rust-lang.org/stable/edition-guide/">edition</a> is not the same thing as the rust version.
+For example, code that is written for edition 2021 could interoperate seamlessly with code that is written for edition
+2018 as long as we use a rust version that supports at least edition 2021.</p>
+<p>Under dependencies, we can specify external libraries that we would like to use.
+These external libraries are called crates.
+The cargo registry can be used to look up available crates at <a href="https://crates.io/">https://crates.io/</a>.
+Our own project would also be referred to as a crate.</p>
+<h2 id="srcmainrs"><a class="header" href="#srcmainrs">src/main.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;Hello, world!&quot;);
+}
+</code></pre></pre>
+<p>Like with a C/C++ project, rust expects a <code>main()</code> function which will used as the entry point of the program.
+It is possible to compile without a main function or without the rust standard library for bare metal programming.</p>
+<p><code>println!()</code> is a macro which will print to stdout. We will talk more about macros later.</p>
+<h1 id="build-and-run"><a class="header" href="#build-and-run">Build and run</a></h1>
+<p>Use <code>cargo build</code> to compile:</p>
+<pre><code class="language-shell">cargo build
+cargo build --debug          # &lt;- Default behaviour
+cargo build --release
+</code></pre>
+<p>This will produce a <code>target/</code> directory with the following binaries:</p>
+<pre><code>./target/debug/demo-project
+./target/release/demo-project
+</code></pre>
+<p>When we build our crate, cargo generates a <code>Cargo.lock</code> file. This file contains information about the build such as the
+versions and checksums of external crates that were downloaded and compiled into our program.
+This file is useful if we want to ensure reproducible builds.</p>
+<p>Use <code>cargo run</code> to both compile and then run:</p>
+<pre><code class="language-shell">cargo run
+cargo run --debug            # &lt;- Default behaviour
+cargo run --release
+</code></pre>
+<p>Use <code>cargo clean</code> to delete the <code>target/</code> directory.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="multiple-binaries"><a class="header" href="#multiple-binaries">Multiple binaries</a></h1>
+<p>By default, cargo expects to find a <code>main.rs</code> file with an entry point that it can use to create a binary.
+Instead, we could create a project with multiple binaries:</p>
+<h2 id="structure"><a class="header" href="#structure">Structure</a></h2>
+<pre><code>Cargo.toml
+src/
+    client.rs
+    server.rs
+
+examples/
+    hello_world_example.rs
+
+target/        &lt;- Compiled binaries found here
+    debug/
+        client
+        server
+        examples/
+            hello_world_example
+</code></pre>
+<h2 id="cargotoml-1"><a class="header" href="#cargotoml-1">Cargo.toml</a></h2>
+<pre><code class="language-toml">[package]
+name = &quot;multiple-binaries&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+[[bin]]
+name = &quot;client&quot;
+path = &quot;src/client.rs&quot;
+
+[[bin]]
+name = &quot;server&quot;
+path = &quot;src/server.rs&quot;
+</code></pre>
+<h2 id="srcclientrs"><a class="header" href="#srcclientrs">src/client.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;I am a client.&quot;);
+}
+</code></pre></pre>
+<h2 id="srcserverrs"><a class="header" href="#srcserverrs">src/server.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;I am a server.&quot;);
+}
+</code></pre></pre>
+<h2 id="exampleshello_world_examplers"><a class="header" href="#exampleshello_world_examplers">examples/hello_world_example.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;I am an example.&quot;);
+}
+</code></pre></pre>
+<p>Use <code>cargo run</code> with the <code>--bin</code> or <code>--example</code> arguments to specify which binary to run:</p>
+<pre><code class="language-shell">cargo run --bin client
+cargo run --bin server
+cargo run --example hello_world_example
+</code></pre>
+<p>The <code>examples/</code> directory is a special location where we can place code samples for users to run with demo data.
+For example, if we were creating a graphics renderer we could include some demo scenes as examples.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="unit-testing"><a class="header" href="#unit-testing">Unit testing</a></h1>
+<p>The easiest way to do unit testing is to create functions marked with the <code>#[test]</code> macro.
+We can do this anywhere within the crate.</p>
+<p>We haven't talked about function syntax yet but for now we will use the following add function:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn add(a: u32, b: u32) -&gt; u32 {
+    a + b
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>A unit test looks like this:</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[test]
+fn test_add() {
+    assert_eq!(add(7, 12), 19);
+    assert_ne!(add(8, 8), 0);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p><code>#[test]</code>, <code>assert_eq!()</code>, and <code>assert_ne!()</code> are all macros.</p>
+<h2 id="srcmainrs-1"><a class="header" href="#srcmainrs-1">src/main.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;Hello, world!&quot;);
+}
+
+fn add(a: u32, b: u32) -&gt; u32 {
+    a + b
+}
+
+#[test]
+fn test_add_0() {
+    assert_eq!(add(7, 12), 19);
+}
+
+#[test]
+fn test_add_1() {
+    assert_eq!(add(23, 56), 79);
+}
+
+#[test]
+fn test_add_2() {
+    assert_ne!(add(2, 2), 5);
+}
+</code></pre></pre>
+<p>Use <code>cargo test</code> to run all unit tests:</p>
+<pre><code>$ cargo test
+   Compiling unit-testing v0.1.0 (/tmp/unit-testing)
+    Finished test [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests (target/debug/deps/unit_testing-e0254e70a2565982)
+
+running 3 tests
+test test_add_0 ... ok
+test test_add_1 ... ok
+test test_add_2 ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+</code></pre>
+<p>There is no guarantee on the order in which tests will be run.</p>
+<h1 id="running-a-subset-of-tests"><a class="header" href="#running-a-subset-of-tests">Running a subset of tests</a></h1>
+<p>We can run only a specific test by its name:</p>
+<pre><code class="language-shell">cargo test test_add_1
+</code></pre>
+<p>We can also specify a range of tests:</p>
+<pre><code class="language-shell">cargo test test_add_
+</code></pre>
+<p>This will run all tests which contain the substring <code>test_add_</code>.</p>
+<h1 id="tests-module"><a class="header" href="#tests-module">Tests module</a></h1>
+<p>Rust convention is to have unit tests in the same file as the code that is being tested but in a submodule.
+Having it in the same file makes it more convenient to update the tests when updating the code.
+Having it in a submodule avoids namespace pollution from all the test functions being created.</p>
+<h2 id="srcmainrs-2"><a class="header" href="#srcmainrs-2">src/main.rs</a></h2>
+<pre><pre class="playground"><code class="language-rust">fn main() {
+    println!(&quot;Hello, world!&quot;);
+}
+
+fn add(a: u32, b: u32) -&gt; u32 {
+    a + b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::add;
+
+    #[test]
+    fn test_add_0() {
+        assert_eq!(add(7, 12), 19);
+    }
+
+    #[test]
+    fn test_add_1() {
+        assert_eq!(add(23, 56), 79);
+    }
+
+    #[test]
+    fn test_add_2() {
+        assert_ne!(add(2, 2), 5);
+    }
+}
+</code></pre></pre>
+<ul>
+<li><code>mod tests { ... }</code> creates a submodule called tests.</li>
+<li><code>use super::add;</code> imports the <code>add()</code> function from the containing module.</li>
+<li><code>#[cfg(test)]</code> tells cargo to only compile this code when running <code>cargo test</code> and not in a normal build.</li>
+</ul>
 
                     </main>
 
