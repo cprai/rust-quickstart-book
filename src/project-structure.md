@@ -99,6 +99,10 @@ This will produce a `target/` directory with the following binaries:
 ./target/release/demo-project
 ```
 
+When we build our crate, cargo generates a `Cargo.lock` file. This file contains information about the build such as the
+versions and checksums of external crates that were downloaded and compiled into our program.
+This file is useful if we want to ensure reproducible builds.
+
 Use `cargo run` to both compile and then run:
 
 ```shell
