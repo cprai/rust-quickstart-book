@@ -19,7 +19,7 @@
 
 These types come with many useful constant values such as: `f32::NAN`, `std::f32::consts::PI`, `u32::MAX`, etc.
 
-Notice that there is no empty type such as `null`, `nil`, `undefined`, or `None` like we might see in other languages.
+Notice that there is no empty type such as `null`, `nil`, `undefined`, `void`, or `None` like we might see in other languages.
 In rust, similar behaviour can be achieved using the `Option<>` type which we will see later.
 
 # Functions
@@ -28,6 +28,7 @@ In rust, similar behaviour can be achieved using the `Option<>` type which we wi
 // Arguments a and b both have type u32
 // Return type is also u32
 fn add(a: u32, b: u32) -> u32 {
+    // Statements must end with a semicolon ;
     return a + b;
 }
 
@@ -37,7 +38,7 @@ fn foo(a: bool) {
     // Code goes here
 }
 
-// There is a special return type called never for functions that never return
+// There is a special return type called "never" for functions that never return
 fn start_web_server() -> ! {
     // Loop forever
 }
@@ -46,7 +47,7 @@ fn start_web_server() -> ! {
 # Control flow
 
 ```rust
-fn difference(a: u32, b: u32) -> u32 {
+fn if_else(a: u32, b: u32) -> u32 {
     // No need to put parentheses () around the conditional
     if a < b {
         return b - a;
@@ -58,14 +59,21 @@ fn difference(a: u32, b: u32) -> u32 {
         return a - b;
     }
 }
+
+// TODO: talk about match expressions
 ```
 
 # Variables and literals
 
 ```rust
-fn variables(a: u32, b: u32) {
+fn variables(a: u32, b: u32) -> u32 {
     // It is not possible to create a variable without assigning a value to it
     let sum: u32 = a + b;
+
+    // All variables are immutable by default
+    // Use the "mut" keyword to create mutable variables
+    let mut x: u32 = 12;
+    x = 83;
 
     // Types can omitted if the compiler is able to figure it out based on context
     let product = a * b;
@@ -117,13 +125,77 @@ fn literals() -> f32 {
 
 Rust is a statically typed language so all variables must have a type that can be determined at compile time.
 However, the compiler is quite clever which often lets us omit types.
-There are some ambitious scenarios where the compiler may choose a default without raising a warning.
+There are some ambiguous scenarios where the compiler may choose a default type without raising a warning.
 Best practice is to always be as explicit as possible.
 
-### Quiz:
+### Quiz
 
 Does the following statement result in a sign extension?
 
 ```rust
 let octal = 0o_72_i8;
+```
+
+# Blocks and scopes
+
+```rust
+// Functions bodies create a new scope
+fn nesting(a: u32, b: u32) -> u32 {
+    // A new scope can be created anywhere by using curly braces {}
+    {
+        // Variables from the outer scope can be accessed in the inner scope
+        let scoped_variable = a + b;
+    }
+    // scoped_variable is not visible outside of its enclosing block
+
+    // Functions can also be confined to a scope
+    fn triple(a: u32) -> u32 {
+        return a * 3;
+    }
+
+    // The "return" keyword can be omitted if it is the last statement in the block
+    // To do this, we also omit the semicolon ;
+    fn quadruple(a: u32) -> u32 {
+        let double = a * a;
+
+        double * double
+    }
+
+    triple(4) + quadruple(5)
+}
+
+fn shadowing() {
+    // Rust allows variables to be redefined within the same scope
+    // The redefined variable can even have a different type
+    // This is called "shadowing"
+    let x: u32 = 17;
+    let x: bool = true;
+    {
+        // Within nested scopes, it is also called "shadowing"
+        // This type of shadowing should be more familiar from other languages
+        let x: f32 = 5.5;
+    }
+    // Be careful with shadowing because it can easily lead to errors
+    // The compiler will not warn you about shadowed variable names
+
+    // This can help in keeping variable names from getting ugly
+    // It also helps avoid having mutable variables as often as possible
+    let input = get_user_input();
+    let input = parse_integer(input);
+}
+```
+
+### Quiz
+
+Come back to this one after learning about references.
+
+What will be the result of this code?
+
+```rust
+let x: u32 = 17;
+let x_ref: &u32 = &x;
+
+let x: bool = false;
+
+print!("{}", *x_ref);
 ```
