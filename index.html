@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Basic Syntax - Rust Quickstart Book</title>
+        <title>Introduction - Rust Quickstart Book</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic-syntax.html"><strong aria-hidden="true">1.</strong> Basic Syntax</a></li><li class="chapter-item expanded "><a href="project-structure.html"><strong aria-hidden="true">2.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">2.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">2.2.</strong> Unit Testing</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction/introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="introduction/installation.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="introduction/ecosystem.html"><strong aria-hidden="true">1.2.</strong> Ecosystem</a></li><li class="chapter-item expanded "><a href="introduction/ide-setup.html"><strong aria-hidden="true">1.3.</strong> IDE Setup</a></li></ol></li><li class="chapter-item expanded "><a href="basic-syntax.html"><strong aria-hidden="true">2.</strong> Basic Syntax</a></li><li class="chapter-item expanded "><a href="project-structure.html"><strong aria-hidden="true">3.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">3.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">3.2.</strong> Unit Testing</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,86 +134,26 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="comments"><a class="header" href="#comments">Comments</a></h1>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// This is a comment
-/* This is a
-    multiline comment */
-<span class="boring">}
-</span></code></pre></pre>
-<h1 id="basic-types"><a class="header" href="#basic-types">Basic types</a></h1>
-<table><thead><tr><th>Type</th><th>Description</th></tr></thead><tbody>
-<tr><td><code>u32</code></td><td>Unsigned 32 bit integer. Also have <code>u8</code>, <code>u16</code>, <code>u64</code>, and <code>u128</code>. When an architecture is unable to support an integer width, it will be emulated in software.</td></tr>
-<tr><td><code>i32</code></td><td>Signed 32 bit integer. Also have <code>i8</code>, <code>i16</code>, <code>i64</code>, and <code>i128</code>.</td></tr>
-<tr><td><code>usize</code></td><td>Unsigned integer that is atleast large enough to hold a memory address. Also have <code>isize</code> for signed. <code>usize</code> is commonly used as the size type of container classes such as <code>Vec</code>.</td></tr>
-<tr><td><code>f32</code></td><td>32 bit floating point number. Also have <code>f64</code>.</td></tr>
-<tr><td><code>bool</code></td><td>Boolean value.</td></tr>
-</tbody></table>
-<h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>// Arguments a and b both have type u32
-// Return type is also u32
-fn add(a: u32, b: u32) -&gt; u32 {
-    return a + b;
-}
-
-// Functions could return nothing
-// This is the C/C++ equivalent of a void return type
-fn foo(a: bool) {
-    // Code goes here
-}
-
-// There is a special return type called never for functions that never return
-fn start_web_server() -&gt; ! {
-    // Loop forever
-}
-<span class="boring">}
-</span></code></pre></pre>
-<h1 id="control-flow"><a class="header" href="#control-flow">Control flow</a></h1>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn difference(a: u32, b: u32) -&gt; u32 {
-    // No need to put parentheses () around the conditional
-    if a &lt; b {
-        return b - a;
-    }
-    else if b &lt; a {
-        return a - b;
-    }
-    else {
-        return a - b;
-    }
-}
-<span class="boring">}
-</span></code></pre></pre>
-<h1 id="variables"><a class="header" href="#variables">Variables</a></h1>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn add(a: u32, b: u32) -&gt; u32 {
-    // It is not possible to create a variable without assigning a value to it
-    let result: u32 = a + b;
-
-    // Types can omitted if the compiler is able to figure it out based on context
-    let product = a * b;
-
-    return result;
-}
-<span class="boring">}
-</span></code></pre></pre>
-<p>Rust is a statically types language so all variables must have a type that can be determined at compile time.
-However, the compiler is quite clever which often lets us omit types.</p>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>This book is meant to serve as a rapid introduction to the rust programming language.
+It is geared towards developers that are already fairly experienced with programming in other languages.
+Specifically, experience in C/C++ or something similar is recommended.</p>
+<p>We will not waste time with concepts such as pointers, loops, structs, etc.
+Instead, we will dive right into rust syntax/idioms and talk about how it is different from other languages.</p>
+<p>This book will contain many examples and is written based on the concept of &quot;show, don't tell&quot;.
+There are also quiz questions throughout to encourage the reader to think deeper or experiment with code.</p>
+<p>There will likely be some mistakes and typos.
+Please reach out if any are spotted.</p>
+<h3 id="authors"><a class="header" href="#authors">Authors</a></h3>
+<ul>
+<li>Chuck Rai</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="next" href="project-structure.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="introduction/installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
@@ -222,7 +162,7 @@ However, the compiler is quite clever which often lets us omit types.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="next" href="project-structure.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="introduction/installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

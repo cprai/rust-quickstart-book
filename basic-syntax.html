@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="basic-syntax.html" class="active"><strong aria-hidden="true">1.</strong> Basic Syntax</a></li><li class="chapter-item expanded "><a href="project-structure.html"><strong aria-hidden="true">2.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">2.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">2.2.</strong> Unit Testing</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction/introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="introduction/installation.html"><strong aria-hidden="true">1.1.</strong> Installation</a></li><li class="chapter-item expanded "><a href="introduction/ecosystem.html"><strong aria-hidden="true">1.2.</strong> Ecosystem</a></li><li class="chapter-item expanded "><a href="introduction/ide-setup.html"><strong aria-hidden="true">1.3.</strong> IDE Setup</a></li></ol></li><li class="chapter-item expanded "><a href="basic-syntax.html" class="active"><strong aria-hidden="true">2.</strong> Basic Syntax</a></li><li class="chapter-item expanded "><a href="project-structure.html"><strong aria-hidden="true">3.</strong> Project Structure</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="multiple-binaries.html"><strong aria-hidden="true">3.1.</strong> Multiple Binaries</a></li><li class="chapter-item expanded "><a href="unit-testing.html"><strong aria-hidden="true">3.2.</strong> Unit Testing</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -150,7 +150,11 @@
 <tr><td><code>usize</code></td><td>Unsigned integer that is atleast large enough to hold a memory address. Also have <code>isize</code> for signed. <code>usize</code> is commonly used as the size type of container classes such as <code>Vec</code>.</td></tr>
 <tr><td><code>f32</code></td><td>32 bit floating point number. Also have <code>f64</code>.</td></tr>
 <tr><td><code>bool</code></td><td>Boolean value.</td></tr>
+<tr><td><code>char</code></td><td>32 bit Unicode Scalar Value used to hold a single character. This is enough bits to store any Unicode character in a single <code>char</code>.</td></tr>
 </tbody></table>
+<p>These types come with many useful constant values such as: <code>f32::NAN</code>, <code>std::f32::consts::PI</code>, <code>u32::MAX</code>, etc.</p>
+<p>Notice that there is no empty type such as <code>null</code>, <code>nil</code>, <code>undefined</code>, <code>void</code>, or <code>None</code> like we might see in other languages.
+In rust, similar behaviour can be achieved using the <code>Option&lt;&gt;</code> type which we will see later.</p>
 <h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
@@ -158,6 +162,7 @@
 </span>// Arguments a and b both have type u32
 // Return type is also u32
 fn add(a: u32, b: u32) -&gt; u32 {
+    // Statements must end with a semicolon ;
     return a + b;
 }
 
@@ -167,7 +172,7 @@ fn foo(a: bool) {
     // Code goes here
 }
 
-// There is a special return type called never for functions that never return
+// There is a special return type called &quot;never&quot; for functions that never return
 fn start_web_server() -&gt; ! {
     // Loop forever
 }
@@ -177,7 +182,7 @@ fn start_web_server() -&gt; ! {
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn difference(a: u32, b: u32) -&gt; u32 {
+</span>fn if_else(a: u32, b: u32) -&gt; u32 {
     // No need to put parentheses () around the conditional
     if a &lt; b {
         return b - a;
@@ -189,30 +194,155 @@ fn start_web_server() -&gt; ! {
         return a - b;
     }
 }
+
+// TODO: talk about match expressions
 <span class="boring">}
 </span></code></pre></pre>
-<h1 id="variables"><a class="header" href="#variables">Variables</a></h1>
+<h1 id="variables-and-literals"><a class="header" href="#variables-and-literals">Variables and literals</a></h1>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>fn add(a: u32, b: u32) -&gt; u32 {
+</span>fn variables(a: u32, b: u32) -&gt; u32 {
     // It is not possible to create a variable without assigning a value to it
-    let result: u32 = a + b;
+    let sum: u32 = a + b;
+
+    // All variables are immutable by default
+    // Use the &quot;mut&quot; keyword to create mutable variables
+    let mut x: u32 = 12;
+    x = 83;
 
     // Types can omitted if the compiler is able to figure it out based on context
     let product = a * b;
 
-    return result;
+    return sum;
+}
+
+fn literals() -&gt; f32 {
+    // char literals should be surrounded by single quotes ''
+    let heart_eyed_cat: char = '😻';
+    let pile_of_poo: char = '\u{1F4A9}';
+
+    let boolean_value: bool = true;
+    let other_boolean_value: bool = false;
+
+    // Literals have built in type annotation
+    let integer_value: u16 = 15u16;
+    let other_integer_value: i64 = -54i64;
+    let float_value: f64 = 23.532f64;
+
+    // This is another case where types can be omitted
+    let omit_variable_type = 43u32;
+    let omit_literal_type: u32 = 43;
+
+    // Literals can contain underscores _ for readability
+    let one_million = 1_000_000_u32;
+
+    let usize_value = 27_usize;
+    let isize_value = -14_isize;
+    let float_32_pi = 3.14159_f32;
+    let float_32_accurate_pi = std::f32::consts::PI;
+    let float_64_nan = f64::NAN;
+    let u32_max_value = u32::MAX;
+
+    // Ways to specify integers
+    let decimal = 23_u32;
+    let hex = 0x_fa_42_u16;
+    let octal = 0o_72_u8;
+    let binary = 0b_1111_0000_u8;
+
+    let dense_hex: u16 = 0xfa42;
+    let dense_octal: u8 = 0o72;
+    let dense_binary: u8 = 0b11110000;
+
+    // The float type here can be inferred through the function return type
+    return 2.71828;
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>Rust is a statically types language so all variables must have a type that can be determined at compile time.
-However, the compiler is quite clever which often lets us omit types.</p>
+<p>Rust is a statically typed language so all variables must have a type that can be determined at compile time.
+However, the compiler is quite clever which often lets us omit types.
+There are some ambiguous scenarios where the compiler may choose a default type without raising a warning.
+Best practice is to always be as explicit as possible.</p>
+<h3 id="quiz"><a class="header" href="#quiz">Quiz</a></h3>
+<p>Does the following statement result in a sign extension?</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let octal = 0o_72_i8;
+<span class="boring">}
+</span></code></pre></pre>
+<h1 id="blocks-and-scopes"><a class="header" href="#blocks-and-scopes">Blocks and scopes</a></h1>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Functions bodies create a new scope
+fn nesting(a: u32, b: u32) -&gt; u32 {
+    // A new scope can be created anywhere by using curly braces {}
+    {
+        // Variables from the outer scope can be accessed in the inner scope
+        let scoped_variable = a + b;
+    }
+    // scoped_variable is not visible outside of its enclosing block
+
+    // Functions can also be confined to a scope
+    fn triple(a: u32) -&gt; u32 {
+        return a * 3;
+    }
+
+    // The &quot;return&quot; keyword can be omitted if it is the last statement in the block
+    // To do this, we also omit the semicolon ;
+    fn quadruple(a: u32) -&gt; u32 {
+        let double = a * a;
+
+        double * double
+    }
+
+    triple(4) + quadruple(5)
+}
+
+fn shadowing() {
+    // Rust allows variables to be redefined within the same scope
+    // The redefined variable can even have a different type
+    // This is called &quot;shadowing&quot;
+    let x: u32 = 17;
+    let x: bool = true;
+    {
+        // Within nested scopes, it is also called &quot;shadowing&quot;
+        // This type of shadowing should be more familiar from other languages
+        let x: f32 = 5.5;
+    }
+    // Be careful with shadowing because it can easily lead to errors
+    // The compiler will not warn you about shadowed variable names
+
+    // This can help in keeping variable names from getting ugly
+    // It also helps avoid having mutable variables as often as possible
+    let input = get_user_input();
+    let input = parse_integer(input);
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="quiz-1"><a class="header" href="#quiz-1">Quiz</a></h3>
+<p>Come back to this one after learning about references.</p>
+<p>What will be the result of this code?</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x: u32 = 17;
+let x_ref: &amp;u32 = &amp;x;
+
+let x: bool = false;
+
+print!(&quot;{}&quot;, *x_ref);
+<span class="boring">}
+</span></code></pre></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="introduction/ide-setup.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
                             <a rel="next" href="project-structure.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
@@ -222,6 +352,9 @@ However, the compiler is quite clever which often lets us omit types.</p>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="introduction/ide-setup.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
                     <a rel="next" href="project-structure.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
